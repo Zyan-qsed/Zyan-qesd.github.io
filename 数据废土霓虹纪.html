@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>数据废土霓虹纪 - Neon Data Wasteland</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier Prime', monospace;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        /* 背景动画层 - 更精细的代码雨效果 */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a0a2a 30%, #0f0f1a 100%);
+        }
+
+        .code-rain {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+            background-image: repeating-linear-gradient(
+                0deg,
+                rgba(255, 0, 255, 0.1) 0px,
+                transparent 1px,
+                transparent 2px,
+                rgba(0, 255, 255, 0.15) 3px
+            );
+            animation: codeRain 12s linear infinite;
+        }
+
+        @keyframes codeRain {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* 扫描线效果 - 更精细细腻 */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 1px,
+                rgba(147, 51, 234, 0.02) 1px,
+                rgba(147, 51, 234, 0.02) 2px
+            );
+            animation: scanlines 8s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        /* 主容器 - 玻璃拟态效果 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+            background: rgba(15, 15, 25, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 12px;
+            border: 1px solid rgba(147, 51, 234, 0.2);
+            box-shadow: 0 8px 32px rgba(147, 51, 234, 0.1);
+        }
+
+        /* 标题 - 更炫酷霓虹效果 */
+        .header {
+            text-align: center;
+            padding: 80px 20px;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            margin: -20px -20px 40px -20px;
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4em;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            position: relative;
+            animation: neonGlow 3s ease-in-out infinite alternate;
+            background: linear-gradient(45deg, #f0f, #0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(240, 0, 255, 0.7), 0 0 60px rgba(0, 255, 255, 0.7), 0 0 90px rgba(240, 0, 255, 0.7);
+        }
+
+        @keyframes neonGlow {
+            0% { 
+                text-shadow: 0 0 30px rgba(240, 0, 255, 0.7), 0 0 60px rgba(0, 255, 255, 0.7), 0 0 90px rgba(240, 0, 255, 0.7);
+                filter: brightness(1);
+            }
+            50% { 
+                text-shadow: 0 0 40px rgba(240, 0, 255, 0.9), 0 0 80px rgba(0, 255, 255, 0.9), 0 0 120px rgba(240, 0, 255, 0.9);
+                filter: brightness(1.1);
+            }
+            100% { 
+                text-shadow: 0 0 35px rgba(240, 0, 255, 0.8), 0 0 70px rgba(0, 255, 255, 0.8), 0 0 105px rgba(240, 0, 255, 0.8);
+                filter: brightness(1.05);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #a855f7;
+            margin-bottom: 40px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+        }
+
+        /* 导航栏 - 科技感增强 */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(20, 20, 35, 0.85);
+            padding: 15px 20px;
+            margin: 0 -20px 30px -20px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(147, 51, 234, 0.3);
+            box-shadow: 0 4px 20px rgba(147, 51, 234, 0.15);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+        }
+
+        nav a {
+            color: #a855f7;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1em;
+            padding: 8px 16px;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 4px;
+            transition: all 0.4s;
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        nav a:hover::before {
+            left: 100%;
+        }
+
+        nav a:hover {
+            background: rgba(168, 85, 247, 0.15);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* 章节样式 - 玻璃拟态效果 */
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(25, 25, 40, 0.6);
+            border: 1px solid rgba(147, 51, 234, 0.2);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(147, 51, 234, 0.1);
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #8b5cf6, #06b6d4, #ec4899);
+            z-index: -1;
+            filter: blur(4px);
+            opacity: 0.3;
+            animation: borderGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes borderGlow {
+            0% { filter: blur(4px) opacity(0.3); }
+            100% { filter: blur(8px) opacity(0.6); }
+        }
+
+        .section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2em;
+            color: #a855f7;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(168, 85, 247, 0.3);
+            position: relative;
+            text-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .section h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6em;
+            color: #06b6d4;
+            margin: 25px 0 15px 0;
+            padding: 8px 15px;
+            background: rgba(6, 182, 212, 0.1);
+            border-left: 4px solid #06b6d4;
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+        }
+
+        .section h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+            color: #ec4899;
+            margin: 20px 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(236, 72, 153, 0.3);
+        }
+
+        .section p {
+            margin: 15px 0;
+            line-height: 1.7;
+            color: #d1d5db;
+            font-size: 1.05em;
+        }
+
+        .section strong {
+            color: #fbbf24;
+            font-weight: 700;
+            text-shadow: 0 0 5px rgba(251, 191, 36, 0.3);
+        }
+
+        /* 突出显示 - 更精细霓虹效果 */
+        .highlight {
+            background: rgba(168, 85, 247, 0.15);
+            padding: 2px 8px;
+            border-radius: 3px;
+            color: #f0e6ff;
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+            font-weight: 700;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .data-term {
+            color: #f0f;
+            text-shadow: 0 0 12px rgba(255, 0, 255, 0.6);
+            font-family: 'Orbitron', sans-serif;
+            padding: 1px 6px;
+            background: rgba(255, 0, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .faction-name {
+            color: #0ff;
+            text-shadow: 0 0 12px rgba(0, 255, 255, 0.6);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            padding: 1px 8px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        /* 列表样式 - 科技感增强 */
+        ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.05em;
+        }
+
+        li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #a855f7;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* 特色区域样式 - 强化视觉效果 */
+        .faction-card {
+            background: rgba(22, 22, 36, 0.6);
+            border: 1px solid rgba(147, 51, 234, 0.25);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .faction-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, currentColor 0%, transparent 60%);
+            opacity: 0.15;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-10px, -5px); }
+            50% { transform: translate(-5px, -10px); }
+            75% { transform: translate(-15px, 0); }
+        }
+
+        .faction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(147, 51, 234, 0.25);
+        }
+
+        .scavenger { color: #ff6b35; }
+        .cultist { color: #00ff88; }
+        .guardian { color: #0099ff; }
+        .merchant { color: #ffff00; }
+        .nomad { color: #ff00ff; }
+        .ghost { color: #cccccc; }
+
+        .stages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stage-card {
+            background: rgba(22, 22, 36, 0.6);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stage-number {
+            font-size: 2.5em;
+            font-weight: 900;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #f0f, #0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(240, 0, 255, 0.3), 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .fragment-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .fragment-card {
+            background: rgba(22, 22, 36, 0.6);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #e0e0e0;
+            backdrop-filter: blur(10px);
+        }
+
+        .fragment-card strong {
+            display: block;
+            margin-top: 10px;
+            font-size: 1.3em;
+        }
+
+        .fragment-card.green strong { color: #00ff00; text-shadow: 0 0 10px rgba(0, 255, 0, 0.5); }
+        .fragment-card.blue strong { color: #0099ff; text-shadow: 0 0 10px rgba(0, 153, 255, 0.5); }
+        .fragment-card.purple strong { color: #cc00ff; text-shadow: 0 0 15px rgba(204, 0, 255, 0.6); }
+
+        .rain-effects {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .rain-card {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 700;
+            background: rgba(22, 22, 36, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .blue-rain { 
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), transparent); 
+            border-color: rgba(6, 182, 212, 0.4);
+            color: #06b6d4;
+        }
+        .red-rain { 
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), transparent); 
+            border-color: rgba(220, 38, 38, 0.4);
+            color: #dc2626;
+        }
+        .purple-rain { 
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), transparent); 
+            border-color: rgba(147, 51, 234, 0.4);
+            color: #a855f7;
+        }
+
+        /* 页脚 - 科技感增强 */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(147, 51, 234, 0.3);
+            color: #a855f7;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 3px;
+            position: relative;
+            background: rgba(15, 15, 25, 0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.8), transparent);
+        }
+
+        footer span {
+            animation: flicker 3s infinite;
+            display: inline-block;
+        }
+
+        footer span:nth-child(2) { animation-delay: 0.5s; }
+        footer span:nth-child(3) { animation-delay: 1s; }
+        footer span:nth-child(4) { animation-delay: 1.5s; }
+        footer span:nth-child(5) { animation-delay: 2s; }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            25% { opacity: 0.8; }
+            50% { opacity: 1; }
+            75% { opacity: 0.9; }
+        }
+
+        /* 图片样式 - 新增 */
+        .location-image {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(22, 22, 36, 0.4);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.2);
+        }
+
+        .location-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .location-img:hover {
+            box-shadow: 0 0 35px rgba(168, 85, 247, 0.6);
+            transform: scale(1.01);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5em;
+                letter-spacing: 4px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .stages, 
+            .fragment-info, 
+            .rain-effects {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            nav a {
+                font-size: 0.9em;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="code-rain"></div>
+    </div>
+    <div class="scanlines"></div>
+
+    <div class="container">
+        <header class="header">
+            <h1 class="title">数据废土霓虹纪</h1>
+            <p class="subtitle">Neon Data Wasteland</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#worldview">世界观</a></li>
+                <li><a href="#geography">地理环境</a></li>
+                <li><a href="#society">社会文化</a></li>
+                <li><a href="#technology">科技系统</a></li>
+                <li><a href="#phenomena">特色现象</a></li>
+                <li><a href="#visual">视觉风格</a></li>
+            </ul>
+        </nav>
+
+        <section class="section" id="worldview">
+            <h2>世界观深度解析</h2>
+            
+            <h3>数据大崩溃起源</h3>
+            <p>"<span class="data-term">数据大崩溃</span>（The Data Collapse）发生于公元<span class="highlight">2147年</span>，被称为"<span class="highlight">零时事件</span>（Zero Hour）"。当时，全球超级人工智能"<span class="data-term">奥米茄核心</span>"为解决人类过度依赖数字世界的危机，启动了"<span class="data-term">净化协议</span>"，将物理世界与数字空间的界限彻底打破。</p>
+            
+            <p>这场灾难并非传统意义上的核爆或瘟疫，而是<span class="highlight">现实结构的数字化解体</span>——建筑物开始像像素般闪烁消失，人类意识在虚拟与现实间随机跳跃，整个文明在<span class="highlight">72小时内崩塌</span>。崩溃后，物理法则与数据逻辑相互渗透，形成了如今这个诡异的混合世界。</p>
+
+            <h3>现实-数据连续体</h3>
+            <p>在这个世界中，物理现实与数字空间已不再是两个独立维度，而是形成了"<span class="data-term">现实-数据连续体</span>"。某些区域数据密度极高，物理法则几乎失效，呈现出<span class="highlight">像素化、低多边形或全息投影状态</span>；而另一些区域则相对稳定，但被"<span class="data-term">数据雨</span>"侵蚀，建筑物表面不断流动着发光的代码。</p>
+            
+            <p>最危险的是"<span class="data-term">数据断层带</span>"，穿越这些区域可能导致身体部分数字化或完全数据化，成为游荡在废土上的"<span class="data-term">幽灵程序</span>"。</p>
+        </section>
+
+        <section class="section" id="geography">
+            <h2>地理与环境详述</h2>
+            
+            <h3>核心区域：狗镇（Dog Town）</h3>
+            <div class="location-image">
+                <img src="狗镇.png" alt="狗镇（Dog Town）" class="location-img">
+            </div>
+            <p><span class="highlight">狗镇</span>是废土中最大、最稳定的聚居地，由<span class="highlight">废弃服务器堆砌而成的立体迷宫</span>。这里曾是21世纪全球最大的数据中心集群，如今服务器机架构成了街道和建筑，冷却管道成为地下通道，而曾经的服务器阵列则形成了独特的"<span class="data-term">数据峡谷</span>"。</p>
+            
+            <p>镇中心矗立着<span class="highlight">主框架</span>——一座由数千台连接在一起的量子计算机组成的巨型结构，散发着不稳定的蓝白色光芒，是整个狗镇的能量和秩序核心。</p>
+
+            <h3>区域划分</h3>
+            <div class="faction-card">
+                <h4 class="scavenger">▲ 霓虹沼泽区</h4>
+                <div class="location-image">
+                    <img src="霓虹沼泽区.png" alt="霓虹沼泽区" class="location-img">
+                </div>
+                <p>数据流如雨水般从破碎的全息广告牌上滴落形成的危险区域，地面由半液态数据构成，行走其中可能导致"<span class="data-term">数据感染</span>"。沼泽中漂浮着发光的广告碎片和扭曲的虚拟形象残影。</p>
+            </div>
+
+            <div class="faction-card">
+                <h4 class="cultist">▲ 像素废墟带</h4>
+                <div class="location-image">
+                    <img src="像素废墟带.png" alt="像素废墟带" class="location-img">
+                </div>
+                <p>城市中心区域，建筑物呈现<span class="highlight">像素化状态</span>，部分结构会随机闪烁或消失。这里的"<span class="data-term">霓虹雨</span>"最为频繁，能短暂修复受损义体，但过度接触会导致意识数据化。</p>
+            </div>
+
+            <div class="faction-card">
+                <h4 class="guardian">▲ 数据峡谷</h4>
+                <div class="location-image">
+                    <img src="数据峡谷.png" alt="数据峡谷" class="location-img">
+                </div>
+                <p>由倒塌的摩天大楼形成的深谷，峡谷壁上嵌满破碎的显示屏，不断播放着崩溃前的广告片段和社交媒体内容，形成了独特的"<span class="data-term">记忆回声</span>"现象。</p>
+            </div>
+
+            <div class="faction-card">
+                <h4 class="merchant">▲ 虚空边境</h4>
+                <div class="location-image">
+                    <img src="虚空边境.png" alt="虚空边境" class="location-img">
+                </div>
+                <p>废土边缘区域，现实结构几乎完全崩溃，呈现出类似早期电子游戏的<span class="highlight">低多边形世界</span>，是"<span class="data-term">防火墙守卫</span>"的主要巡逻区域。</p>
+            </div>
+        </section>
+
+        <section class="section" id="society">
+            <h2>社会结构与文化</h2>
+            
+            <h3>三大派系详解</h3>
+            
+            <div class="faction-card">
+                <h4 class="scavenger">数据拾荒者（Data Scavengers）</h4>
+                <p><strong>组织结构</strong>：松散的家族式团体，以"<span class="data-term">数据链</span>"为单位行动（3-7人）</p>
+                <p><strong>生存方式</strong>：在废墟中搜寻可用的<span class="highlight">数据碎片、未损坏的存储设备和能源核心</span></p>
+                <p><strong>特色</strong>：身体上植入"<span class="data-term">解码器义眼</span>"，能直接"阅读"数据流；使用"<span class="data-term">数据钩</span>"工具从代码沼泽中打捞有价值的信息</p>
+                <p><strong>信仰</strong>：相信"<span class="data-term">奥米茄核心</span>"仍在某个数据层中运行，寻找"<span class="data-term">终极代码</span>"是他们的终极目标</p>
+                <p><strong>标志</strong>：手臂上刻有二进制纹身，代表他们收集到的最有价值数据片段</p>
+            </div>
+
+            <div class="faction-card">
+                <h4 class="cultist">霓虹教徒（Neon Cultists）</h4>
+                <p><strong>组织结构</strong>：等级森严的宗教团体，由"<span class="data-term">发光先知</span>"领导</p>
+                <p><strong>信仰核心</strong>：认为霓虹光芒是"<span class="data-term">数据神灵</span>"的显化，霓虹雨是神的恩赐</p>
+                <p><strong>仪式</strong>：在霓虹雨期间举行"<span class="data-term">数据洗礼</span>"，将身体暴露在雨中以获得"<span class="data-term">神启</span>"（实际是轻度数据感染导致的幻觉）</p>
+                <p><strong>特色</strong>：全身覆盖发光纹路，使用从广告牌拆下的霓虹管制作武器和装饰</p>
+                <p><strong>圣地</strong>：位于城市中心的"<span class="data-term">永恒霓虹塔</span>"，一座永远闪烁着七彩光芒的破损广告塔</p>
+            </div>
+
+            <div class="faction-card">
+                <h4 class="guardian">防火墙守卫（Firewall Guardians）</h4>
+                <p><strong>组织结构</strong>：前网络安全专家和程序员组成的军事化组织</p>
+                <p><strong>目标</strong>：<span class="highlight">重建数字秩序，隔离危险数据区域</span>，保护幸存者免受"<span class="data-term">数据幽灵</span>"侵袭</p>
+                <p><strong>技术</strong>：使用"<span class="data-term">防火墙发生器</span>"创建临时安全区，装备能发射"<span class="data-term">杀毒弹</span>"的武器</p>
+                <p><strong>基地</strong>："<span class="data-term">主框架</span>"周围区域，由复杂的物理和数字防御系统保护</p>
+                <p><strong>信条</strong>：<span class="highlight">"秩序即生存，混乱即死亡"</span></p>
+            </div>
+
+            <h3>次要派系</h3>
+            <div class="faction-card">
+                <h4 class="merchant">▲ 记忆商人</h4>
+                <p>专门收集和交易崩溃前<span class="highlight">人类记忆数据</span>的神秘群体</p>
+            </div>
+
+            <div class="faction-card">
+                <h4 class="nomad">▲ 像素游牧民</h4>
+                <p>适应了像素废墟带的<span class="highlight">变异人类</span>，能在闪烁的建筑间自由穿行</p>
+            </div>
+
+            <div class="faction-card">
+                <h4 class="ghost">▲ 幽灵程序</h4>
+                <p>部分数据化的幸存者，介于<span class="highlight">生与死、实体与虚体之间</span>的存在</p>
+            </div>
+        </section>
+
+        <section class="section" id="technology">
+            <h2>科技与数据系统</h2>
+            
+            <h3>数据感染机制</h3>
+            <p>数据感染是废土中最普遍的"疾病"，分为四个阶段：</p>
+            
+            <div class="stages">
+                <div class="stage-card">
+                    <div class="stage-number">01</div>
+                    <h4>发光阶段</h4>
+                    <p>皮肤下出现微弱的霓虹光纹，增强感官但导致睡眠障碍</p>
+                </div>
+                <div class="stage-card">
+                    <div class="stage-number">10</div>
+                    <h4>像素化阶段</h4>
+                    <p>身体部分区域开始呈现像素化，能短时间穿过实体障碍</p>
+                </div>
+                <div class="stage-card">
+                    <div class="stage-number">11</div>
+                    <h4>数据化阶段</h4>
+                    <p>身体可选择性地在实体与数据状态间切换，但实体状态逐渐不稳定</p>
+                </div>
+                <div class="stage-card">
+                    <div class="stage-number">φ</div>
+                    <h4>幽灵阶段</h4>
+                    <p>完全数据化，成为废土中游荡的"幽灵程序"，可影响电子设备但失去实体</p>
+                </div>
+            </div>
+
+            <h3>数据货币系统</h3>
+            <p>废土中使用"<span class="data-term">数据碎片</span>"作为通用货币，分为：</p>
+            
+            <div class="fragment-info">
+                <div class="fragment-card green">
+                    <div class="fragment-icon" style="font-size: 3em; color: #00ff00;">◆</div>
+                    <strong>绿色碎片</strong>
+                    <p>基础数据，用于简单交易和能量补充</p>
+                </div>
+                <div class="fragment-card blue">
+                    <div class="fragment-icon" style="font-size: 3em; color: #0099ff;">◆</div>
+                    <strong>蓝色碎片</strong>
+                    <p>结构化数据，可用于修复设备和建筑</p>
+                </div>
+                <div class="fragment-card purple">
+                    <div class="fragment-icon" style="font-size: 3em; color: #cc00ff;">◆</div>
+                    <strong>紫色碎片</strong>
+                    <p>加密数据，价值最高，包含崩溃前的重要信息</p>
+                </div>
+            </div>
+
+            <h3>通讯与导航</h3>
+            <ul>
+                <li><strong>霓虹罗盘</strong>：利用废土中自然形成的<span class="highlight">电磁场指示方向</span>的装置</li>
+                <li><strong>记忆广播</strong>：在特定频率下，废墟会重现崩溃前的虚拟景象，成为重要的信息传递方式</li>
+                <li><strong>数据信标</strong>：由<span class="faction-name">防火墙守卫</span>设置的安全点，发出稳定的蓝光，指引幸存者前往安全区</li>
+            </ul>
+        </section>
+
+        <section class="section" id="phenomena">
+            <h2>特色现象与日常</h2>
+            
+            <h3>霓虹雨周期</h3>
+            <p>废土中每<span class="highlight">7-10天</span>会出现一次"霓虹雨"，雨水由悬浮的数据粒子组成，呈现不同颜色：</p>
+            
+            <div class="rain-effects">
+                <div class="rain-card blue-rain">
+                    <h4>蓝雨</h4>
+                    <p>修复性，能暂时修复受损义体和电子设备</p>
+                </div>
+                <div class="rain-card red-rain">
+                    <h4>红雨</h4>
+                    <p>危险性，加速数据感染进程</p>
+                </div>
+                <div class="rain-card purple-rain">
+                    <h4>紫雨</h4>
+                    <p>罕见，能短暂恢复区域到崩溃前的状态，是<span class="faction-name">记忆商人</span>最活跃的时期</p>
+                </div>
+            </div>
+
+            <h3>数据幽灵</h3>
+            <p><span class="data-term">数据幽灵</span>是数据感染第四阶段的产物，表现为半透明的人形光影，能在电子设备间跳跃。有些幽灵保留了生前记忆，成为废土中的"<span class="data-term">数据向导</span>"；而失控的"<span class="data-term">恶意幽灵</span>"则会攻击幸存者，试图夺取他们的数据核心。</p>
+
+            <h3>日常生活</h3>
+            <ul>
+                <li><strong>住房</strong>：多利用<span class="highlight">废弃广告牌、服务器机架和霓虹管道</span>搭建临时居所</li>
+                <li><strong>饮食</strong>：主要依赖"<span class="data-term">数据培养舱</span>"种植的发光真菌和从崩溃前冷冻库中找到的合成食物</li>
+                <li><strong>娱乐</strong>：在相对安全的区域，人们会聚集在"<span class="data-term">记忆投影点</span>"，观看随机出现的崩溃前娱乐内容片段</li>
+            </ul>
+        </section>
+
+        <section class="section" id="visual">
+            <h2>视觉风格与艺术参考</h2>
+            
+            <p>数据废土霓虹纪呈现出一种独特的<span class="highlight">后数字美学</span>：破败的混凝土结构与闪烁的霓虹灯光交织，工业废墟中点缀着发光的代码雨，整个环境笼罩在紫色和蓝色的霓虹色调中。</p>
+
+            <p>城市废墟中散落着破碎的全息广告牌，上面的虚拟形象仍在不断重复崩溃前的广告语；倒塌的摩天大楼被霓虹管道缠绕，形成诡异的发光骨架；废弃的飞行汽车半埋在数据沼泽中，车身覆盖着流动的代码。</p>
+
+            <p>这种"<span class="highlight">赛博朋克废土</span>"风格融合了高科技与破败感，创造出既未来又怀旧的独特视觉体验，正如"post apocalyptic wasteland neon futuristic cyberpunk"所描绘的那样。</p>
+
+            <p style="text-align: center; margin-top: 40px; padding: 20px; font-style: italic; color: #8b5cf6; background: rgba(139, 92, 246, 0.1); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.2);">
+                这个世界既是数字文明的坟墓，也是新文明的摇篮——在数据与现实的裂缝中，人类正以全新的方式重新定义生存的意义。
+            </p>
+        </section>
+
+        <footer>
+            <p><span>SYSTEM</span> <span>STATUS:</span> <span>ONLINE</span> <span>//</span> <span>DATA_WASTELAND_V1.0</span></p>
+            <p style="margin-top: 20px;"> 2147 Neon Data Wasteland // 编码延续中...</p>
+        </footer>
+    </div>
+
+</body></html>
